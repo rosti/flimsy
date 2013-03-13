@@ -1,0 +1,39 @@
+#!/bin/sh
+
+FLIMSY_DIR="$HOME/.flimsy"
+
+JDK_DIR="$FLIMSY_DIR/jdk"
+
+if [ -e $JDK_DIR ]; then
+	export PATH="$JDK_DIR/bin:$PATH"
+fi
+
+JAVA="java"
+CLOJURE_JAR="$FLIMSY_DIR/clojure.jar"
+
+function usage {
+	echo "$0 command <options> <...>"
+}
+
+function run_clojure {
+	$JAVA -cp $CLOJURE_JAR clojure.main $1
+}
+
+if [ $# -eq 0 ]; then
+	usage
+	exit 1
+fi
+
+case $1 in
+	repl)
+		run_clojure
+		;;
+
+	run)
+		run_clojure $2
+		;;
+
+	*)
+		run_clojure $1
+		;;
+esac
