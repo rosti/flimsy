@@ -1,22 +1,76 @@
 #!/bin/sh
 
 FLIMSY_DIR="$HOME/.flimsy"
-
 JAVA_DIR="$FLIMSY_DIR/jdk"
-
-if [ -e $JAVA_DIR ]; then
-	export PATH="$JAVA_DIR/bin:$PATH"
-fi
-
 JAVA="java"
-CLOJURE_JAR="$FLIMSY_DIR/clojure.jar"
+CLOJURES_DIR="$FLIMSY_DIR/clojures"
+CLOJURE_LINK="$FLIMSY_DIR/clojure.jar"
+
+# create the flimsy dir if it is not there
+[ -d $FLIMSY_DIR ] || mkdir $FLIMSY_DIR
+
+# if $JAVA_DIR exists prepend it to $PATH
+[ -e $JAVA_DIR ] && export PATH="$JAVA_DIR/bin:$PATH"
 
 function usage {
 	echo "$0 command <options> <...>"
 }
 
+function install_clojure {
+	version=$1
+
+	if [ -z $version ]; then
+		echo "Please, specify a version such as '1.5.1'"
+		exit 1
+	fi
+
+	clojure_jar="clojure-$version.jar"
+	clojure_path="$CLOJURES_DIR/$clojure_jar"
+	clojure_url="http://repo1.maven.org/maven2/org/clojure/clojure/$version/$clojure_jar"
+
+	# create the clojures dir if it is not there
+	[ -d $CLOJURES_DIR ] || mkdir $CLOJURES_DIR
+
+	if [ -f $clojure_path ]; then
+		echo "Clojure $version is already installed."
+		echo "You can activate it with this command:"
+		echo "flimsy use $version"
+		exit 0
+	fi
+
+	exec wget -O $clojure_path $clojure_url
+}
+
+function use_clojure {
+	version=$1
+
+	if [ -z $version ]; then
+		echo "Please, specify a version such as '1.5.1'"
+		exit 1
+	fi
+
+	clojure_path="$CLOJURES_DIR/clojure-$version.jar"
+
+	if ! [ -e $clojure_path ]; then
+		echo "Clojure $version is not installed."
+		echo "You can install it with this command:"
+		echo "flimsy install $version"
+		exit 1
+	fi
+
+	[ -e $CLOJURE_LINK ] && rm $CLOJURE_LINK
+
+	exec ln -s $clojure_path $CLOJURE_LINK
+}
+
 function run_clojure {
-	$JAVA -cp $CLOJURE_JAR clojure.main $1
+	if ! [ -e $CLOJURE_LINK ]; then
+		echo "You have not activated a particular version of Clojure"
+		echo "You can use a pair of the 'install' and 'use' commands for this."
+		exit 1
+	fi
+
+	$JAVA -cp $CLOJURE_LINK clojure.main $1
 }
 
 if [ $# -eq 0 ]; then
@@ -25,6 +79,14 @@ if [ $# -eq 0 ]; then
 fi
 
 case $1 in
+	install)
+		install_clojure $2
+		;;
+
+	use)
+		use_clojure $2
+		;;
+
 	repl)
 		run_clojure
 		;;
@@ -37,3 +99,5 @@ case $1 in
 		run_clojure $1
 		;;
 esac
+
+exit 0
