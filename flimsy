@@ -2,10 +2,10 @@
 
 FLIMSY_DIR="$HOME/.flimsy"
 
-JDK_DIR="$FLIMSY_DIR/jdk"
+JAVA_DIR="$FLIMSY_DIR/jdk"
 
-if [ -e $JDK_DIR ]; then
-	export PATH="$JDK_DIR/bin:$PATH"
+if [ -e $JAVA_DIR ]; then
+	export PATH="$JAVA_DIR/bin:$PATH"
 fi
 
 JAVA="java"
