@@ -11,7 +11,17 @@ CLOJURE_LINK="$FLIMSY_DIR/clojure.jar"
 [ -d $FLIMSY_DIR ] || mkdir $FLIMSY_DIR
 
 function usage {
-	echo "$0 command <options> <...>"
+	printf "flimsy <command> [options] [...]\n"
+	printf "\n"
+	printf "Where <command> can be:\n"
+	printf "\thelp\t\t\t- Show this help message\n"
+	printf "\tver|version\t\t- Show currently running clojure version\n"
+	printf "\tlist\t\t\t- List all installed clojure versions\n"
+	printf "\tinstall <version>\t- Install a given clojure version\n"
+	printf "\tuse <version>\t\t- Use the given clojure version\n"
+	printf "\trepl\t\t\t- Run REPL shell\n"
+	printf "\trun <filename>\t\t- Run clojure file\n"
+	printf "\n"
 }
 
 function clojure_version_from_path {
@@ -95,7 +105,7 @@ function run_clojure {
 		exit 1
 	fi
 
-	$JAVA -cp $CLOJURE_LINK clojure.main $1
+	$JAVA -cp $CLOJURE_LINK clojure.main "$@"
 }
 
 if [ $# -eq 0 ]; then
@@ -125,11 +135,12 @@ case $1 in
 		;;
 
 	run)
-		run_clojure $2
+		shift
+		run_clojure "$@"
 		;;
 
-	*)
-		run_clojure $1
+	*|help)
+		usage
 		;;
 esac
 
