@@ -1,16 +1,14 @@
 #!/bin/sh
 
 FLIMSY_DIR="$HOME/.flimsy"
-JAVA_DIR="$FLIMSY_DIR/jdk"
-JAVA="java"
+
 CLOJURES_DIR="$FLIMSY_DIR/clojures"
 CLOJURE_LINK="$FLIMSY_DIR/clojure.jar"
 
+[ -z $JAVA ] && JAVA="java"
+
 # create the flimsy dir if it is not there
 [ -d $FLIMSY_DIR ] || mkdir $FLIMSY_DIR
-
-# if $JAVA_DIR exists prepend it to $PATH
-[ -e $JAVA_DIR ] && export PATH="$JAVA_DIR/bin:$PATH"
 
 function usage {
 	echo "$0 command <options> <...>"
