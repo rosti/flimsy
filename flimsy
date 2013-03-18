@@ -16,6 +16,33 @@ function usage {
 	echo "$0 command <options> <...>"
 }
 
+function clojure_version_from_path {
+	basename $1 | awk '{ printf("%s", $sub(/.jar$/, "", $sub(/^clojure\-/, "", $0))) }'
+}
+
+function current_clojure_version {
+	clojure_version_from_path $(readlink $CLOJURE_LINK)
+}
+
+function clojure_version {
+	echo "clojure $(current_clojure_version)"
+}
+
+function clojures_list {
+	running_version=$(current_clojure_version)
+
+	for clojure in $CLOJURES_DIR/clojure-*.jar; do
+
+		version=$(clojure_version_from_path $clojure)
+
+		if [ "$version" = "$running_version" ]; then
+			echo $version \*
+		else
+			echo $version
+		fi
+	done
+}
+
 function install_clojure {
 	version=$1
 
@@ -79,6 +106,14 @@ if [ $# -eq 0 ]; then
 fi
 
 case $1 in
+	ver|version)
+		clojure_version
+		;;
+
+	list)
+		clojures_list
+		;;
+
 	install)
 		install_clojure $2
 		;;
