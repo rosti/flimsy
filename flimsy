@@ -105,7 +105,7 @@ function run_clojure {
 		exit 1
 	fi
 
-	$JAVA -cp $CLOJURE_LINK clojure.main "$@"
+	exec $JAVA -cp $CLOJURE_LINK clojure.main "$@"
 }
 
 if [ $# -eq 0 ]; then
