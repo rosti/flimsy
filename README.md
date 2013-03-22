@@ -46,3 +46,7 @@ To install flimsy you just need to download the flimsy script and put it in some
     flimsy list  
     flimsy ver  
 
+- Evaluate a single line of Clojure code (inspired from `perl -e`):
+
+    flimsy eval '(prn "Hello!")'
+
