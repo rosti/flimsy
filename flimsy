@@ -37,11 +37,11 @@ clojure_version () {
 }
 
 clojures_list () {
-	running_version=$(current_clojure_version)
+	local running_version=$(current_clojure_version)
 
 	for clojure in $CLOJURES_DIR/clojure-*.jar; do
 
-		version=$(clojure_version_from_path $clojure)
+		local version=$(clojure_version_from_path $clojure)
 
 		if [ "$version" = "$running_version" ]; then
 			echo $version \*
@@ -52,16 +52,16 @@ clojures_list () {
 }
 
 install_clojure () {
-	version=$1
+	local version=$1
 
 	if [ -z $version ]; then
 		echo "Please, specify a version such as '1.5.1'"
 		exit 1
 	fi
 
-	clojure_jar="clojure-$version.jar"
-	clojure_path="$CLOJURES_DIR/$clojure_jar"
-	clojure_url="http://repo1.maven.org/maven2/org/clojure/clojure/$version/$clojure_jar"
+	local clojure_jar="clojure-$version.jar"
+	local clojure_path="$CLOJURES_DIR/$clojure_jar"
+	local clojure_url="http://repo1.maven.org/maven2/org/clojure/clojure/$version/$clojure_jar"
 
 	# create the clojures dir if it is not there
 	[ -d $CLOJURES_DIR ] || mkdir $CLOJURES_DIR
@@ -77,14 +77,14 @@ install_clojure () {
 }
 
 use_clojure () {
-	version=$1
+	local version=$1
 
 	if [ -z $version ]; then
 		echo "Please, specify a version such as '1.5.1'"
 		exit 1
 	fi
 
-	clojure_path="$CLOJURES_DIR/clojure-$version.jar"
+	local clojure_path="$CLOJURES_DIR/clojure-$version.jar"
 
 	if ! [ -e $clojure_path ]; then
 		echo "Clojure $version is not installed."
