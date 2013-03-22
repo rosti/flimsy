@@ -10,7 +10,7 @@ CLOJURE_LINK="$FLIMSY_DIR/clojure.jar"
 # create the flimsy dir if it is not there
 [ -d $FLIMSY_DIR ] || mkdir $FLIMSY_DIR
 
-function usage {
+usage () {
 	printf "flimsy <command> [options] [...]\n"
 	printf "\n"
 	printf "Where <command> can be:\n"
@@ -24,19 +24,19 @@ function usage {
 	printf "\n"
 }
 
-function clojure_version_from_path {
+clojure_version_from_path () {
 	basename $1 | awk '{ printf("%s", $sub(/.jar$/, "", $sub(/^clojure\-/, "", $0))) }'
 }
 
-function current_clojure_version {
+current_clojure_version () {
 	clojure_version_from_path $(readlink $CLOJURE_LINK)
 }
 
-function clojure_version {
+clojure_version () {
 	echo "clojure $(current_clojure_version)"
 }
 
-function clojures_list {
+clojures_list () {
 	running_version=$(current_clojure_version)
 
 	for clojure in $CLOJURES_DIR/clojure-*.jar; do
@@ -51,7 +51,7 @@ function clojures_list {
 	done
 }
 
-function install_clojure {
+install_clojure () {
 	version=$1
 
 	if [ -z $version ]; then
@@ -76,7 +76,7 @@ function install_clojure {
 	exec wget -O $clojure_path $clojure_url
 }
 
-function use_clojure {
+use_clojure () {
 	version=$1
 
 	if [ -z $version ]; then
@@ -98,7 +98,7 @@ function use_clojure {
 	exec ln -s $clojure_path $CLOJURE_LINK
 }
 
-function run_clojure {
+run_clojure () {
 	if ! [ -e $CLOJURE_LINK ]; then
 		echo "You have not activated a particular version of Clojure"
 		echo "You can use a pair of the 'install' and 'use' commands for this."
