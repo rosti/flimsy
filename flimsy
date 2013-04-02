@@ -109,6 +109,44 @@ run_clojure () {
 	exec $JAVA -cp $CLOJURE_LINK clojure.main "$@"
 }
 
+clojure_repl() {
+	if [ -x $(which rlwrap) ]; then
+		local version=$(current_clojure_version)
+		local completions_dir="$FLIMSY_DIR/completions"
+		local completions_file="$completions_dir/completions-$version.txt"
+		local completions_gen="$completions_dir/completions_gen.clj"
+		local history_file="$completions_dir/history-$version.txt"
+		local breakchars="(){}[],^%$#@\"\";:''|\\"
+
+		# Create the completions directory if it doesn't exist
+		[ -d $completions_dir ] || mkdir $completions_dir
+
+		# Write down the completions generation script if it doesn't exist
+		if ! [ -e $completions_gen ]; then
+			cat <<-EOT > $completions_gen
+				(def completions (mapcat (comp keys ns-publics) (all-ns)))
+				(with-open
+				  [f (java.io.BufferedWriter.
+				       (java.io.FileWriter. (first *command-line-args*)))]
+				  (.write f (apply str (interpose \newline completions))))
+			EOT
+		fi
+
+		# Generate new completions file if there isn't one already
+		if ! [ -e $completions_file ]; then
+			$0 run $completions_gen $completions_file
+		fi
+
+		exec rlwrap --remember -c -b "$breakchars" -f $completions_file \
+			-H $history_file $0 run -r
+	else
+		echo "You don't have rlwrap installed. It is needed for REPL history,"
+		echo "limited autocompletion, bracket matching and etc."
+		echo "rlwrap can be readily installed on most Unix like OS-es"
+		run_clojure -r
+	fi
+}
+
 clojure_eval () {
 	local one_liner=$1
 
@@ -144,7 +182,7 @@ case $1 in
 		;;
 
 	repl)
-		run_clojure
+		clojure_repl
 		;;
 
 	run)

@@ -16,6 +16,10 @@ broken systems (like Ubuntu 12.04)
 
 Flimsy requires POSIX like envirnonment and wget. For Clojure itself you need to install Java as well and make sure that it can be found in PATH.
 
+There is an optional requirement for [rlwrap](http://utopia.knoware.nl/~hlub/rlwrap/).
+`rlwrap` allows Clojure's built in REPL to keep history, match brackets and do limited auto completion.
+You can find `rlwrap` available as package for almost any Unix system these days.
+
 **Installing flimsy**
 ---------------------
 
