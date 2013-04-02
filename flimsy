@@ -148,7 +148,7 @@ clojure_repl() {
 }
 
 clojure_eval () {
-	local one_liner=$1
+	local one_liner="$1"
 
 	if [ -z "$one_liner" ]; then
 		echo "You have to specify a single parameter representing one line of code."
