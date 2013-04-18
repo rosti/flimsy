@@ -54,3 +54,12 @@ To install flimsy you just need to download the flimsy script and put it in some
 
     flimsy eval '(prn "Hello!")'
 
+- Print documentation for `prn`:
+
+    flimsy doc prn
+
+- Print source of `prn`:
+
+    flimsy src prn
+    flimsy source prn
+

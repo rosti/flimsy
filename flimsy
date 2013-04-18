@@ -22,6 +22,8 @@ usage () {
 	printf "\trepl\t\t\t- Run REPL shell\n"
 	printf "\trun <filename>\t\t- Run clojure file\n"
 	printf "\teval <code>\t\t- Eval a single line of clojure code\n"
+	printf "\tdoc <symbol>\t\t- Print documentation for <symbol>\n"
+	printf "\tsrc|source <symbol>\t- Print source of <symbol>\n"
 	printf "\n"
 }
 
@@ -192,6 +194,14 @@ case $1 in
 
 	eval)
 		clojure_eval "$2"
+		;;
+
+	doc)
+		clojure_eval "(do (use 'clojure.repl) (doc $2))"
+		;;
+
+	source|src)
+		clojure_eval "(do (use 'clojure.repl) (source $2))"
 		;;
 
 	*|help)
