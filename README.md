@@ -60,6 +60,6 @@ To install flimsy you just need to download the flimsy script and put it in some
 
 - Print source of `prn`:
 
-    flimsy src prn
+    flimsy src prn  
     flimsy source prn
 
